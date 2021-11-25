@@ -10,7 +10,7 @@ export function MyApp() {
             if (controlsUI.current) {
                 gui.current = await setupDatGui({ model: "movenet", autoPlace: false });
                 controlsUI.current.appendChild(gui.current.domElement)
-                await runApp();
+                await runApp(window);
             }
         };
         initGui()
