@@ -1,6 +1,6 @@
 {
   "name": "online-pose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Analyze pose in real-time",
   "author": "maddyonline",
   "license": "MIT",
@@ -24,7 +24,6 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
     "@mediapipe/pose": "~0.4.0",
     "@tensorflow-models/pose-detection": "^0.0.6",
     "@tensorflow/tfjs-backend-wasm": "^3.8.0",
@@ -32,11 +31,11 @@
     "@tensorflow/tfjs-converter": "^3.8.0",
     "@tensorflow/tfjs-core": "^3.11.0",
     "dat.gui": "^0.7.7",
+    "react": "^16.0.0",
     "scatter-gl": "0.0.8",
     "stats.js": "^0.17.0"
   },
   "devDependencies": {
-    "microbundle-crl": "^0.13.10",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
@@ -50,6 +49,7 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-standard": "^4.0.1",
     "gh-pages": "^2.2.0",
+    "microbundle-crl": "^0.13.10",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.4",
     "react": "^16.13.1",
