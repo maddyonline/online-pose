@@ -130,7 +130,7 @@ function endEstimatePosesStats(stats) {
   }
 }
 
-async function renderResult(stats) {
+async function renderResult(stats, handlePoses) {
   if (camera.video.readyState < 2) {
     await new Promise((resolve) => {
       camera.video.onloadeddata = () => {
@@ -153,6 +153,7 @@ async function renderResult(stats) {
       poses = await detector.estimatePoses(
         camera.video,
         { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
+      handlePoses(poses);
     } catch (error) {
       detector.dispose();
       detector = null;
@@ -172,19 +173,19 @@ async function renderResult(stats) {
   }
 }
 
-async function renderPrediction(window, stats) {
+async function renderPrediction(window, stats, handlePoses) {
   await checkGuiUpdate(window);
 
   if (!STATE.isModelChanged) {
-    await renderResult(stats);
+    await renderResult(stats, handlePoses);
   }
 
-  const recurse = (window, stats) => () => renderPrediction(window, stats)
+  const recurse = (window, stats, handlePoses) => () => renderPrediction(window, stats, handlePoses)
 
-  rafId = requestAnimationFrame(recurse(window, stats))
+  rafId = requestAnimationFrame(recurse(window, stats, handlePoses))
 };
 
-export async function runApp(window, stats) {
+export async function runApp(window, stats, handlePoses) {
 
   camera = await Camera.setupCamera(STATE.camera);
 
@@ -192,6 +193,6 @@ export async function runApp(window, stats) {
 
   detector = await createDetector();
 
-  renderPrediction(window, stats);
+  renderPrediction(window, stats, handlePoses);
 };
 

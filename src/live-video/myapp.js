@@ -3,7 +3,7 @@ import { setupDatGui } from './option_panel';
 import { setupStats } from './stats_panel';
 import { runApp } from './tf_utils';
 
-export function MyApp() {
+export function MyApp({ handlePoses }) {
     const controlsUI = React.useRef(null);
     const statsUI = React.useRef(null);
     const gui = React.useRef(null);
@@ -15,7 +15,7 @@ export function MyApp() {
                 gui.current = await setupDatGui({ model: "movenet", autoPlace: false });
                 controlsUI.current.appendChild(gui.current.domElement)
                 console.log(stats.current, stats.current.customFpsPanel)
-                await runApp(window, stats.current);
+                await runApp(window, stats.current, handlePoses);
             }
         };
         initGui()
