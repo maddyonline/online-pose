@@ -17,12 +17,12 @@
 
 import Stats from "stats.js";
 
-export function setupStats() {
+export function setupStats(parent) {
   const stats = new Stats();
   stats.customFpsPanel = stats.addPanel(new Stats.Panel('FPS', '#0ff', '#002'));
   stats.showPanel(stats.domElement.children.length - 1);
 
-  const parent = document.getElementById('stats');
+  stats.domElement.style.position = 'relative';
   parent.appendChild(stats.domElement);
 
   const statsPanes = parent.querySelectorAll('canvas');

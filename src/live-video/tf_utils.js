@@ -26,12 +26,11 @@ tfjsWasm.setWasmPaths(
 import * as posedetection from '@tensorflow-models/pose-detection';
 
 import { Camera } from './camera';
-import { setupDatGui } from './option_panel';
 import { STATE } from './params';
-import { setupStats } from './stats_panel';
+
 import { setBackendAndEnvFlags } from './util';
 
-let detector, camera, stats;
+let detector, camera;
 let startInferenceTime, numInferences = 0;
 let inferenceTimeSum = 0, lastPanelUpdate = 0;
 let rafId;
@@ -115,7 +114,7 @@ function beginEstimatePosesStats() {
   startInferenceTime = (performance || Date).now();
 }
 
-function endEstimatePosesStats() {
+function endEstimatePosesStats(stats) {
   const endInferenceTime = (performance || Date).now();
   inferenceTimeSum += endInferenceTime - startInferenceTime;
   ++numInferences;
@@ -131,7 +130,7 @@ function endEstimatePosesStats() {
   }
 }
 
-async function renderResult() {
+async function renderResult(stats) {
   if (camera.video.readyState < 2) {
     await new Promise((resolve) => {
       camera.video.onloadeddata = () => {
@@ -160,7 +159,7 @@ async function renderResult() {
       alert(error);
     }
 
-    endEstimatePosesStats();
+    endEstimatePosesStats(stats);
   }
 
   camera.drawCtx();
@@ -173,27 +172,19 @@ async function renderResult() {
   }
 }
 
-async function renderPrediction(window) {
+async function renderPrediction(window, stats) {
   await checkGuiUpdate(window);
 
   if (!STATE.isModelChanged) {
-    await renderResult();
+    await renderResult(stats);
   }
 
-  rafId = requestAnimationFrame(renderPrediction);
+  const recurse = (window, stats) => () => renderPrediction(window, stats)
+
+  rafId = requestAnimationFrame(recurse(window, stats))
 };
 
-export async function runApp(window) {
-  // Gui content will change depending on which model is in the query string.
-  // const urlParams = new URLSearchParams(window.location.search);
-  // if (!urlParams.has('model')) {
-  //   alert('Cannot find model in the query string.');
-  //   return;
-  // }
-
-  // await setupDatGui(urlParams);
-
-  stats = setupStats();
+export async function runApp(window, stats) {
 
   camera = await Camera.setupCamera(STATE.camera);
 
@@ -201,7 +192,6 @@ export async function runApp(window) {
 
   detector = await createDetector();
 
-  renderPrediction(window);
+  renderPrediction(window, stats);
 };
 
-// app();

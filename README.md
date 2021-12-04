@@ -25,6 +25,10 @@ class Example extends Component {
 }
 ```
 
+## Development
+
+Run `yarn start` in both top level and example directories.
+
 ## License
 
 MIT © [maddyonline](https://github.com/maddyonline)
